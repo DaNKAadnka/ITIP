@@ -473,34 +473,7 @@ public class Main {
     }
 
 
-    public static String nonRepeatable (String s, int n=0, char prev = ' ') {
-        if (n == s.length()) {
-            return " ";
-        }
-        else if (s.charAt(n) == prev) {
-            return "" + nonRepeatable(s, n+1, s.charAt(n));
-        }
-        else {
-            return s.charAt(n) + nonRepeatable(s, n+1, s.charAt(n));
-        }
-    }
 
-    public static void binarySystem(int n, int i = 0, int last = 0, String s = "") {
-        if (i == n) {
-            System.out.println(s);
-        }
-        else if (i == 0 || last == 1) {
-            binarySystem(n, i+1, 0, s + "0");
-            binarySystem(n, i+1, 1, s + "1");
-        }
-        else {
-            binarySystem(n, i+1, 1, s+"1");
-        }
-    }
-
-    public static String alphabetRow() {
-
-    }
 
     
 
