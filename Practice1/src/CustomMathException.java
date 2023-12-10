@@ -8,6 +8,8 @@ public class CustomMathException extends Exception {
     // 5) После закрытой скобки идет число(без операции между ними)      +
     // 6) Перед открывающей скобкой идет число без операции между ними   +
     // 7) Вообще не корректные символы                                   +
+    // 8) Пустая строка                                                  +
+    // 9) Деление на ноль                                                +
 
 
     private String message = "Not a valid math operation. ";

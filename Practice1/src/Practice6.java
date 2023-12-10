@@ -38,6 +38,7 @@ public class Practice6 {
         //}
         System.out.println(generateNonconsecutive("6 - 18 / (-1 + 4)"));
         System.out.println(generateNonconsecutive("3 + 5 * (2 - 6)"));
+        System.out.println(generateNonconsecutive("(3) + (5 + (10))"));
         System.out.println(generateNonconsecutive("1 / 0"));
         System.out.println(generateNonconsecutive("1 + *"));
         System.out.println(generateNonconsecutive("12 + () + 6"));
@@ -311,7 +312,8 @@ public class Practice6 {
 
     public static String generateNonconsecutiveTwin1 (String op) throws CustomMathException {
 
-
+        // В отдельной функции парсим выражение в динамический массив
+        // И в ней проверяем строку на корректность
         int priority = 0;
         boolean isFirst = true;
         String opc = "";
@@ -327,8 +329,6 @@ public class Practice6 {
                 // Проверка на то, чтобы была парвильная скобочная последовательность
                 if (priority == 0) {
                     throw(new CustomMathException("Not a valid bracket sequence"));
-                    //System.out.println(ERROR + " Not a valid bracket sequence");
-                    //return ERROR + " Not a valid bracket sequence";
                 }
                 priority--;
                 opAr.add(Character.toString(c));
@@ -367,33 +367,11 @@ public class Practice6 {
         }
 
         if (priority != 0) {
-            //System.out.println(ERROR);
-            //return ERROR + " Not a valid bracket sequence";
             throw new CustomMathException("Not a valid bracket sequence");
         }
-
-        try {
-            return arrayStringToString(generateNonconsecutiveTwin(opAr));
+        else if (opAr.isEmpty()) {
+            throw new CustomMathException("Empty math expression");
         }
-        catch (CustomMathException e) {
-            throw e;
-            //return e.getMessage();
-        }
-    }
-
-    public static ArrayList<String> generateNonconsecutiveTwin(ArrayList<String> opAr) throws CustomMathException {
-        // Проверяем на коректность
-        // Заодно находим операцию с наибольшим приоритетом
-        String ERROR = "Not a valid math operation.";
-
-        // Считаем приоритет текущих операций и приоритет
-        int priority = 0;
-
-        // Пытаемся отыскать отрицательные числы заодно
-        boolean isFirst = true;
-        String opc = "";
-
-
 
         // Теперь у нас есть массив распарсенных частичек выражения.
         //Проверим сначала все на корректность
@@ -401,37 +379,48 @@ public class Practice6 {
         for (int i = 0; i < opAr.size(); i++) {
             // Пустые скобки
             if (i < opAr.size()-1 && opAr.get(i).equals("(") && opAr.get(i+1).equals(")")) {
-                //System.out.println(ERROR + " An empty brackets");
                 throw new CustomMathException("Empty parentheses.");
-                // return ERROR;
             }
             // Две подряд идущие математические операции
             if (i < opAr.size()-1 && is_operation(opAr.get(i)) && is_operation(opAr.get(i+1))) {
-                //System.out.println(ERROR + " Two consecutive parentheses.");
-                // return ERROR;
-                throw new CustomMathException("Two consecutive parentheses.");
+                throw new CustomMathException("Two consecutive operations.");
             }
             // Два подряд идущих числа
             if (i < opAr.size()-1 && is_number(opAr.get(i)) && is_number(opAr.get(i+1))) {
-                //System.out.println(ERROR + " Two consecutive numbers. ");
-                // return ERROR;
                 throw new CustomMathException("Two consecutive numbers.");
             }
             // После закрытой скобки идет число(без операции между ними)
             if (i < opAr.size()-1 && opAr.get(i).equals(")") && is_number(opAr.get(i+1))) {
-                //System.out.println(ERROR + " Missed operation");
-                // return ERROR;
                 throw new CustomMathException("Missed operation");
             }
             // Перед открывающей скобкой идет число без операции между ними
             if (i < opAr.size()-1 && is_number(opAr.get(i)) && opAr.get(i+1).equals("(")) {
-                //System.out.println(ERROR + " Missed operation");
-                // return ERROR;
                 throw new CustomMathException("Missed operation");
             }
         }
 
-        //System.out.println(arrayStringToString(opAr));
+        // Проверим деление на ноль
+        for (int i = 1; i < opAr.size() - 1; i++) {
+
+            if (is_operation(opAr.get(i)) && is_number(opAr.get(i-1)) && is_number(opAr.get(i+1))) {
+                try{
+                    String result = calculate(opAr.get(i-1), opAr.get(i), opAr.get(i+1));
+                }
+                catch (CustomMathException e) {
+                    throw e;
+                }
+            }
+        }
+
+
+        return arrayStringToString(generateNonconsecutiveTwin(opAr));
+    }
+
+    public static ArrayList<String> generateNonconsecutiveTwin(ArrayList<String> opAr) {
+
+        // Считаем приоритет текущих операций и приоритет
+        int priority = 0;
+
         for (String s : opAr) {
             System.out.print(s);
             System.out.print("  ");
@@ -443,6 +432,8 @@ public class Practice6 {
         if (opAr.size() == 1) {
             return opAr;
         }
+        // Еще один исключительный случай - пустая строка
+
 
         boolean isFinded = false;
         // Сначала проверим, есть ли у нас такие скобки, что внутри них всего одно число
@@ -479,21 +470,21 @@ public class Practice6 {
             if (is_operation(opAr.get(i)) && priors[i] == maxPriorCnt) {
                 // Нашли операцию, которую необходимо вычислить
                 // Берем эту опреацию, числа справа и слева и все считаем.
-                String result = calculate(opAr.get(i-1), opAr.get(i), opAr.get(i+1));
-                if (result.equals("Zero exception")) {
-                    //System.out.println(ERROR + " Zero exception");
-                    // return ERROR
-                    //break;
-                    throw new CustomMathException("Zero devided excetion");
-                }
-                else {
+                try {
+                    String result = calculate(opAr.get(i-1), opAr.get(i), opAr.get(i+1));
+
                     opAr.set(i, result);
                     opAr.remove(i-1);
                     opAr.remove(i);
                     break;
                 }
+                catch(CustomMathException e) {
+                    return new ArrayList<>();
+                }
             }
         }
+
+        // Сложность алгоритма -
 
         return generateNonconsecutiveTwin(opAr);
     }
@@ -519,7 +510,7 @@ public class Practice6 {
         }
     }
 
-    public static String calculate (String num1, String op, String num2) {
+    public static String calculate  (String num1, String op, String num2) throws CustomMathException {
         int n1 = Integer.parseInt(num1);
         int n2 = Integer.parseInt(num2);
         int n3 = 0;
@@ -533,7 +524,7 @@ public class Practice6 {
             n3 = n1 * n2;
         }
         else if (op.equals("/")) {
-            if (n2 == 0) return "Zero exception";
+            if (n2 == 0) throw new CustomMathException("Zero exception");
             n3 = n1 / n2;
         }
 
