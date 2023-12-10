@@ -43,7 +43,7 @@ public class Practice6 {
         System.out.println(generateNonconsecutive("12 + () + 6"));
         System.out.println(generateNonconsecutive("850 + (980 * ( 650)))"));
         System.out.println(generateNonconsecutive("oh no, I am probably not a math expression"));
-        System.out.println(generateNonconsecutive());
+        System.out.println(generateNonconsecutive(""));
 
         System.out.println(isValid("aabbcd"));
         System.out.println(isValid("aabbccddeefghi"));
