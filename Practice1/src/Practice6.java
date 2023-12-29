@@ -17,9 +17,37 @@ public class Practice6 {
         System.out.println(hiddenAnagram("D e b90it->?$ (c)a r...d,,#~", "bad credit"));
         System.out.println(hiddenAnagram("Bright is the moon", "Bongo mirth") );
 
+        ArrayList<String> a1 = collect("intercontinentalisationalism", 6);
+        ArrayList<String> a2 = collect("strengths", 3);
+        ArrayList<String> a3 = collect("pneumonoultramicroscopicsilicovolcanoconiosis", 15);
+
+        for (String s : a1) {
+            System.out.println(s);
+        }
+        for (String s : a2) {
+            System.out.println(s);
+        }
+        for (String s : a3) {
+            System.out.println(s);
+        }
+
+        int[] arr1 = {1, 2, 3, 9, 4, 5, 15};
+        int[] arr2 = {1, 2, 3, 9, 4, 15, 3, 5};
+        int[] arr3 = {1, 2, -1, 4, 5, 6, 10, 7};
+
+        System.out.println(Arrays.toString(twoProduct(arr1, 45)));
+        System.out.println(Arrays.toString(twoProduct(arr2, 45)));
+        System.out.println(Arrays.toString(twoProduct(arr3, 20)));
+
 
         System.out.println(nicoCipher("myworldevolvesinhers", "tesh") );
         System.out.println(nicoCipher("mubashirhassan", "crazy"));
+
+        System.out.println(Arrays.toString(isExact(6)));
+        System.out.println(Arrays.toString(isExact(24)));
+        System.out.println(Arrays.toString(isExact(125)));
+        System.out.println(Arrays.toString(isExact(720)));
+        System.out.println(Arrays.toString(isExact(1024)));
 
         System.out.println(fractions("0.(6)"));
         System.out.println(fractions("1.(1)"));
@@ -80,7 +108,6 @@ public class Practice6 {
             }
         }
         text = ntext.toString();
-        //System.out.println(text);
         n = text.length();
 
         int[] tempCount = new int[26];
@@ -93,8 +120,6 @@ public class Practice6 {
         String ans = "notfound";
         for (int l = 0; l + len <= n; l++) {
             int r = l + len;
-//            System.out.println(text.substring(l, r));
-//            System.out.println(temp);
             int[] rayCount = new int[26];
             for (int j = l; j < r; j++) {
                 int ind = text.charAt(j) - 'a';
@@ -105,7 +130,6 @@ public class Practice6 {
             for (int i = 0; i < 26; i++) {
                 if (tempCount[i] != rayCount[i]) {
                     isAns = false;
-                    //System.out.println((char)(i+65));
                 }
             }
             if (isAns) {
@@ -197,31 +221,28 @@ public class Practice6 {
         return ans.toString();
     }
 
-    public static ArrayList< ArrayList<Integer> > twoProduct (int[] arr, int n) {
-        ArrayList< ArrayList<Integer> > e = new ArrayList< ArrayList<Integer> > ();
+    public static int[] twoProduct (int[] arr, int n) {
+        int[] ans = new int[0];
         for (int i = 0; i < arr.length; i++) {
             for (int j = i+1; j < arr.length; j++) {
                 if (arr[i] * arr[j] == n) {
-                    ArrayList<Integer> a1 = new ArrayList<Integer> ();
-                    a1.add(arr[i]);
-                    a1.add(arr[j]);
-                    e.add(a1);
+                    ans = new int[]{i, j};
+                    return ans;
                 }
             }
         }
-        return e;
+        return ans;
     }
 
-    public static ArrayList<Long> isExact (long n) {
+    public static int[] isExact (int n) {
         return isExactly(n, 1, 1);
     }
 
-    public static ArrayList<Long> isExactly(long n, long p, long z) {
+    public static int[] isExactly(int n, int p, int z) {
         if (p >= n) {
-            ArrayList<Long> ans = new ArrayList<>();
+            int[] ans = new int[0];
             if (p == n) {
-                ans.add(p);
-                ans.add(p);
+                ans = new int[] {p, z-1};
             }
             return ans;
         }
@@ -483,8 +504,6 @@ public class Practice6 {
                 }
             }
         }
-
-        // Сложность алгоритма -
 
         return generateNonconsecutiveTwin(opAr);
     }
